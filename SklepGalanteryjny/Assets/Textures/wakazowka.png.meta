@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f68d55a8230be6a46b174231b6f48e7e
+guid: 298ca5f982c191c42bd1da44de2187ab
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2403070404755984699
-    second: "t\u0142o_0"
+      213: -453014402379034640
+    second: wakazowka_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "t\u0142o_0"
+      name: wakazowka_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 6300
-        height: 3500
+        x: 12
+        y: 22
+        width: 362
+        height: 59
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b311cb51dcb695120800000000000000
-      internalID: 2403070404755984699
+      spriteID: 0ffcf0c1dc196b9f0800000000000000
+      internalID: -453014402379034640
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "t\u0142o_0": 2403070404755984699
+      wakazowka_0: -453014402379034640
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
