@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System.IO; // For reading from file system
+using System.IO;
 
 public class managerScript : MonoBehaviour
 {
@@ -11,7 +11,6 @@ public class managerScript : MonoBehaviour
     // To store the dialogue sets from the CSV file
     private List<DialogueSet> dialogueSets;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (customerManager != null && dialogueManager != null)
@@ -29,7 +28,6 @@ public class managerScript : MonoBehaviour
         LoadDialogueSets();
     }
 
-    // Load the dialogue sets from the CSV file
     private void LoadDialogueSets()
     {
         dialogueSets = new List<DialogueSet>();
@@ -43,31 +41,87 @@ public class managerScript : MonoBehaviour
             return;
         }
 
-        // Read the CSV file as text
-        string fileContents = File.ReadAllText(filePath);
+        // Read all lines from the CSV file
+        string[] lines = File.ReadAllLines(filePath);
 
-        // Split the CSV by new line to process each line
-        string[] lines = fileContents.Split(new char[] { '\n' });
-
-        // Process each line to extract the id, linesA, linesB, and item
-        foreach (string line in lines.Skip(1)) // Skip header line
+        if (lines.Length <= 1)
         {
-            string[] columns = line.Split(',');
+            Debug.LogError("CSV file does not contain enough data!");
+            return;
+        }
+
+        // Process each line, skipping the header
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string line = lines[i];
+
+            if (string.IsNullOrWhiteSpace(line)) continue; // Skip empty lines
+
+            // Parse the line while respecting commas within quotes
+            string[] columns = ParseCsvLine(line);
 
             if (columns.Length == 4) // Ensure there are four columns (id, linesA, linesB, item)
             {
-                int id = int.Parse(columns[0].Trim()); // Get the id
-                string linesA = columns[1].Trim().Trim('"'); // Get the first dialogue line (linesA)
-                string linesB = columns[2].Trim().Trim('"'); // Get the second dialogue line (linesB)
-                string item = columns[3].Trim().Trim('"'); // Get the item
+                int id;
+                if (int.TryParse(columns[0].Trim(), out id)) // Parse the id safely
+                {
+                    // Only add sets with IDs between 1 and 40
+                    if (id >= 1 && id <= 40)
+                    {
+                        string linesA = columns[1].Trim().Trim('"'); // Get the first dialogue line (linesA)
+                        string linesB = columns[2].Trim().Trim('"'); // Get the second dialogue line (linesB)
+                        string item = columns[3].Trim().Trim('"'); // Get the item
 
-                // Add the new dialogue set to the list
-                dialogueSets.Add(new DialogueSet(id, linesA, linesB, item));
+                        // Add the dialogue set to the list
+                        dialogueSets.Add(new DialogueSet(id, linesA, linesB, item));
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Skipping malformed line: {line}");
             }
         }
 
-        // Log the count of dialogue sets loaded
-        Debug.Log($"Loaded {dialogueSets.Count} dialogue sets from CSV.");
+        // Log the total number of records loaded
+        Debug.Log($"Loaded {dialogueSets.Count} dialogue sets with IDs from 1 to 40.");
+    }
+
+    private string[] ParseCsvLine(string line)
+    {
+        List<string> fields = new List<string>();
+        bool inQuotes = false;
+        string currentField = "";
+
+        foreach (char c in line)
+        {
+            if (c == '"' && inQuotes)
+            {
+                // End of quoted section
+                inQuotes = false;
+            }
+            else if (c == '"')
+            {
+                // Start of quoted section
+                inQuotes = true;
+            }
+            else if (c == ',' && !inQuotes)
+            {
+                // End of field
+                fields.Add(currentField);
+                currentField = "";
+            }
+            else
+            {
+                // Append to the current field
+                currentField += c;
+            }
+        }
+
+        // Add the last field
+        fields.Add(currentField);
+
+        return fields.ToArray();
     }
 
     public void customerArrives()
@@ -80,7 +134,7 @@ public class managerScript : MonoBehaviour
             return;
         }
 
-        // Select a random dialogue set, if available
+        // Select a random dialogue set from the preloaded list
         DialogueSet selectedSet = dialogueSets[Random.Range(0, dialogueSets.Count)];
 
         if (selectedSet == null || string.IsNullOrEmpty(selectedSet.LinesA) || string.IsNullOrEmpty(selectedSet.LinesB))
@@ -103,7 +157,6 @@ public class managerScript : MonoBehaviour
     }
 }
 
-// Class to store dialogue sets (id, linesA, linesB, and item)
 [System.Serializable]
 public class DialogueSet
 {

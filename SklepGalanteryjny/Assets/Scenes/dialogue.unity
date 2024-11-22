@@ -534,7 +534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textComponent: {fileID: 1540528311}
   lines: []
-  textSpeed: 0.05
+  textSpeed: 0.025
 --- !u!114 &1446090099
 MonoBehaviour:
   m_ObjectHideFlags: 0
