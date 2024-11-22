@@ -1,10 +1,10 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Item:MonoBehaviour
 {
-    
+    public GameObject panel;
     public Inventory Inventory;
     public string itemName;
     public string description;
@@ -62,5 +62,12 @@ public class Item:MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
+    private void OnMouseEnter()
+    {
+        
+    }
+    private void OnMouseExit()
+    {
+        
+    }
 }
