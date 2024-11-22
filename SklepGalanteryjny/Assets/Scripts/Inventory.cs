@@ -3,9 +3,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using System;
 public class Inventory : MonoBehaviour
 {
+    public EventHandler onItemsChanged;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public List<Item> ItemsList;
     public Wardrobe[] wardrobes;
@@ -56,5 +57,9 @@ public class Inventory : MonoBehaviour
             return true;
         }
         else { return false; }
+    }
+    public void itemsChanged()
+    {
+        onItemsChanged?.Invoke(this, EventArgs.Empty);
     }
 }

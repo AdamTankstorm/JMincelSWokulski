@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Item:MonoBehaviour
 {
+    
     public Inventory Inventory;
     public string itemName;
     public string description;
@@ -25,27 +26,38 @@ public class Item:MonoBehaviour
     public void AddItem(int numberOfItems)
     {
         this.count+=numberOfItems;
+        Inventory inventory = FindObjectOfType<Inventory>();
+        inventory.itemsChanged();
+        
+
     }
     public void AddItem()
     {
         this.count++;
+        Inventory inventory = FindObjectOfType<Inventory>();
+        inventory.itemsChanged();
     }
     public void RemoveItem(int numberOfItems)
     {
         this.count -= numberOfItems;
-        if(this.count == 0)
+        Inventory inventory = FindObjectOfType<Inventory>();
+        inventory.itemsChanged();
+        if (this.count == 0)
         {
-            Inventory inventory= FindObjectOfType<Inventory>();
+            inventory= FindObjectOfType<Inventory>();
             inventory.ItemsList.Remove(this);
+
             Destroy(this.gameObject);
         }
     }
     public void RemoveItem()
     {
         this.count--;
+        Inventory inventory = FindObjectOfType<Inventory>();
+        inventory.itemsChanged();
         if (this.count == 0)
         {
-            Inventory inventory = FindObjectOfType<Inventory>();
+            inventory = FindObjectOfType<Inventory>();
             inventory.ItemsList.Remove(this);
             Destroy(this.gameObject);
         }
