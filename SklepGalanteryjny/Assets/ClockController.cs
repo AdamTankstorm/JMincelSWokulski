@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; // Dodaj przestrzeñ nazw dla Image
+using UnityEngine.UI;
 
 public class ClockController : MonoBehaviour
 {
@@ -22,6 +22,7 @@ public class ClockController : MonoBehaviour
     private bool isAnimating = false;
     private bool canReset = false; // Flaga do kontrolowania resetu
     private bool isMovingClock = false; // Flaga przesuwania zegara
+    private bool isReturningClock = false; // Flaga przesuwania zegara
     private bool resetAfterMove = false; // Flaga do uruchomienia resetu po zakoñczeniu animacji ruchu
 
     private float targetAngle;
@@ -70,6 +71,11 @@ public class ClockController : MonoBehaviour
             MoveClockToCenter();
         }
 
+        if (isReturningClock)
+        {
+            ReturnClock();
+        }
+
         if (fadeTime > 0f)
         {
             FadeBackground();
@@ -107,6 +113,13 @@ public class ClockController : MonoBehaviour
         fadeTime = 0f; // Resetuj czas animacji pojawiania siê t³a
     }
 
+    private void StartClockReturn()
+    {
+        isReturningClock = true;
+        moveTime = 0f; // Resetuj czas ruchu
+        fadeTime = 0f; // Resetuj czas animacji pojawiania siê t³a
+    }
+
     private void MoveClockToCenter()
     {
         moveTime += Time.deltaTime;
@@ -119,6 +132,7 @@ public class ClockController : MonoBehaviour
 
             // Rozpocznij animacjê resetu po zakoñczeniu przesuwania zegara na œrodek
             StartReset();
+            Invoke(nameof(StartClockReturn), waitBeforeMove);
         }
 
         // Interpolacja pozycji i skali z efektem ease-in-out
@@ -127,6 +141,25 @@ public class ClockController : MonoBehaviour
 
         // Rozpocznij animacjê t³a (pojawianie siê obrazu)
         fadeTime += Time.deltaTime;
+    }
+
+    private void ReturnClock()
+    {
+        moveTime += Time.deltaTime;
+        float t = moveTime / moveDuration; // Normalizowany czas (0 do 1)
+
+        if (t >= 1f)
+        {
+            t = 1f;
+            isReturningClock = false;
+
+            // Zresetuj zmienne po zakoñczeniu animacji powrotu
+            ResetAll();
+        }
+
+        // Interpolacja pozycji i skali z efektem ease-in-out
+        clockUI.anchoredPosition = Vector3.Lerp(targetPosition, originalPosition, Mathf.SmoothStep(0f, 1f, t));
+        clockUI.localScale = Vector3.Lerp(targetScale, originalScale, Mathf.SmoothStep(0f, 1f, t));
     }
 
     private void FadeBackground()
@@ -184,5 +217,23 @@ public class ClockController : MonoBehaviour
         }
 
         clockHand.eulerAngles = new Vector3(0, 0, -currentAngle);
+    }
+
+    // Funkcja do resetowania wszystkiego
+    private void ResetAll()
+    {
+        currentAngle = startAngle;
+        fadeTime = 0f;
+        resetAfterMove = false;
+        isAnimating = false;
+        isMovingClock = false;
+        isReturningClock = false;
+        clockUI.anchoredPosition = originalPosition;
+        clockUI.localScale = originalScale;
+
+        if (backgroundImage != null)
+        {
+            backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0f); // T³o niewidoczne
+        }
     }
 }
