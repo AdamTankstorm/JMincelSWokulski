@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class ClockController : MonoBehaviour
 {
+
+    public BreakSystem breakSystem;
+
     public Transform clockHand; // Wskazówka zegara
     public RectTransform clockUI; // RectTransform zegara (dla animacji pozycji i skalowania)
     public Image backgroundImage; // Obiekt UI Image dla t³a
@@ -98,6 +101,11 @@ public class ClockController : MonoBehaviour
 
         animationTime = 0f; // Resetuj czas animacji
         isAnimating = true;
+
+        if(targetAngle == 0f)
+        {
+            breakSystem.BreakTime();
+        }
 
         if (targetAngle >= resetAngle)
         {
