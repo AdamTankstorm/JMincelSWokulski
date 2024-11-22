@@ -7,7 +7,7 @@ public class Inventory : MonoBehaviour
     public Wardrobe[] wardrobes;
     public void addWardrabe(Wardrobe wardrobe)
     {
-        wardrobe.
+        
     }
     
 
