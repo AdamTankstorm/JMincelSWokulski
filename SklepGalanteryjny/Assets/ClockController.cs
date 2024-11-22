@@ -3,20 +3,23 @@ using UnityEngine.UI;
 
 public class ClockController : MonoBehaviour
 {
+
+    public BreakSystem breakSystem;
+
     public Transform clockHand; // Wskazówka zegara
     public RectTransform clockUI; // RectTransform zegara (dla animacji pozycji i skalowania)
     public Image backgroundImage; // Obiekt UI Image dla t³a
     public Sprite targetBackgroundSprite; // Obrazek t³a (Source Image)
     public Vector3 targetPosition = Vector3.zero; // Pozycja œrodka ekranu
-    public Vector3 targetScale = Vector3.one * 3f; // Docelowa skala (powiêkszenie)
+    public Vector3 targetScale = Vector3.one * 4f; // Docelowa skala (powiêkszenie)
     public float moveDuration = 1f; // Czas trwania animacji przesuwania i skalowania
     public float waitBeforeMove = 2f; // Czas oczekiwania przed przesuniêciem
     public float fadeDuration = 1f; // Czas trwania animacji "pojawniania siê" t³a
 
-    private float currentAngle = -90f; // Startowa pozycja (270 stopni)
+    private float currentAngle = -180f; // Startowa pozycja (270 stopni)
     private const float stepAngle = 22.5f; // Przesuniêcie o 22,5 stopnia na klienta
-    private const float resetAngle = 90f; // K¹t resetu (90 stopni)
-    private const float startAngle = -90f; // Pocz¹tkowy k¹t po resecie
+    private const float resetAngle = 0f; // K¹t resetu (90 stopni)
+    private const float startAngle = -180f; // Pocz¹tkowy k¹t po resecie
     public float animationDuration = 0.5f; // Czas trwania animacji wskazówki
 
     private bool isAnimating = false;
@@ -98,6 +101,11 @@ public class ClockController : MonoBehaviour
 
         animationTime = 0f; // Resetuj czas animacji
         isAnimating = true;
+
+        if(targetAngle == -90f)
+        {
+            breakSystem.BreakTime();
+        }
 
         if (targetAngle >= resetAngle)
         {
