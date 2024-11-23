@@ -10,6 +10,7 @@ public class managerScript : MonoBehaviour
     public ClockController clockManager;
     public ButtonHandler buttonManager;
     public spawnScript spawnManager;
+    public GameObject shopManager;
 
     // To store the dialogue sets from the CSV file
     private List<DialogueSet> dialogueSets;
@@ -227,6 +228,8 @@ public class managerScript : MonoBehaviour
 
     public void startDay()
     {
+        shopManager.SetActive(true);
+
         customerManager.gameObject.SetActive(true);
         StartCoroutine(customerManager.customerChange());
     }
