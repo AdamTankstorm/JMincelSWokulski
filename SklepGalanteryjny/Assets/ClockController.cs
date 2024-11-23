@@ -1,68 +1,72 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ClockController : MonoBehaviour
 {
+    public event Action midDay;
 
     public BreakSystem breakSystem;
 
-    public Transform clockHand; // Wskazówka zegara
+    public Transform clockHand; // Wskazï¿½wka zegara
     public RectTransform clockUI; // RectTransform zegara (dla animacji pozycji i skalowania)
-    public Image backgroundImage; // Obiekt UI Image dla t³a
-    public Sprite targetBackgroundSprite; // Obrazek t³a (Source Image)
-    public Vector3 targetPosition = Vector3.zero; // Pozycja œrodka ekranu
-    public Vector3 targetScale = Vector3.one * 4f; // Docelowa skala (powiêkszenie)
+    public Image backgroundImage; // Obiekt UI Image dla tï¿½a
+    public Sprite targetBackgroundSprite; // Obrazek tï¿½a (Source Image)
+    public Vector3 targetPosition = Vector3.zero; // Pozycja ï¿½rodka ekranu
+    public Vector3 targetScale = Vector3.one * 4f; // Docelowa skala (powiï¿½kszenie)
     public float moveDuration = 1f; // Czas trwania animacji przesuwania i skalowania
-    public float waitBeforeMove = 2f; // Czas oczekiwania przed przesuniêciem
-    public float fadeDuration = 1f; // Czas trwania animacji "pojawniania siê" t³a
+    public float waitBeforeMove = 2f; // Czas oczekiwania przed przesuniï¿½ciem
+    public float fadeDuration = 1f; // Czas trwania animacji "pojawniania siï¿½" tï¿½a
 
     private float currentAngle = -180f; // Startowa pozycja (270 stopni)
-    private const float stepAngle = 22.5f; // Przesuniêcie o 22,5 stopnia na klienta
-    private const float resetAngle = 0f; // K¹t resetu (90 stopni)
-    private const float startAngle = -180f; // Pocz¹tkowy k¹t po resecie
-    public float animationDuration = 0.5f; // Czas trwania animacji wskazówki
+    private const float stepAngle = 22.5f; // Przesuniï¿½cie o 22,5 stopnia na klienta
+    private const float resetAngle = 0f; // Kï¿½t resetu (90 stopni)
+    private const float startAngle = -180f; // Poczï¿½tkowy kï¿½t po resecie
+    public float animationDuration = 0.5f; // Czas trwania animacji wskazï¿½wki
 
     private bool isAnimating = false;
     private bool canReset = false; // Flaga do kontrolowania resetu
     private bool isMovingClock = false; // Flaga przesuwania zegara
     private bool isReturningClock = false; // Flaga przesuwania zegara
-    private bool resetAfterMove = false; // Flaga do uruchomienia resetu po zakoñczeniu animacji ruchu
+    private bool resetAfterMove = false; // Flaga do uruchomienia resetu po zakoï¿½czeniu animacji ruchu
 
     private float targetAngle;
     private float animationStartAngle;
     private float animationTime;
 
-    private Vector3 originalPosition; // Pocz¹tkowa pozycja zegara
-    private Vector3 originalScale; // Pocz¹tkowa skala zegara
+    private Vector3 originalPosition; // Poczï¿½tkowa pozycja zegara
+    private Vector3 originalScale; // Poczï¿½tkowa skala zegara
     private float moveTime;
-    private float fadeTime = 0f; // Czas trwania animacji pojawiania siê t³a
+    private float fadeTime = 0f; // Czas trwania animacji pojawiania siï¿½ tï¿½a
 
     void Start()
     {
-        // Zapisz oryginaln¹ pozycjê i skalê zegara
+        // Zapisz oryginalnï¿½ pozycjï¿½ i skalï¿½ zegara
         originalPosition = clockUI.anchoredPosition;
         originalScale = clockUI.localScale;
 
-        // Ustaw pocz¹tkow¹ przezroczystoœæ t³a na pe³n¹ przezroczystoœæ (przezroczyste)
+        // Ustaw poczï¿½tkowï¿½ przezroczystoï¿½ï¿½ tï¿½a na peï¿½nï¿½ przezroczystoï¿½ï¿½ (przezroczyste)
         if (backgroundImage != null)
         {
             Color bgColor = backgroundImage.color;
-            backgroundImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, 0f); // T³o jest pocz¹tkowo niewidoczne
+            backgroundImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, 0f); // Tï¿½o jest poczï¿½tkowo niewidoczne
         }
 
-        // Ustaw pocz¹tkowy obrazek t³a
+        // Ustaw poczï¿½tkowy obrazek tï¿½a
         if (backgroundImage != null && targetBackgroundSprite != null)
         {
-            backgroundImage.sprite = targetBackgroundSprite; // Ustaw t³o na obrazek
+            backgroundImage.sprite = targetBackgroundSprite; // Ustaw tï¿½o na obrazek
         }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        /*if (Input.GetKeyDown(KeyCode.Space))
         {
             HandleClient();
-        }
+        }*/
 
         if (isAnimating)
         {
@@ -84,11 +88,11 @@ public class ClockController : MonoBehaviour
             FadeBackground();
         }
 
-        // Jeœli k¹t osi¹gnie 90 stopni, rozpocznij animacjê przesuwania
+        // Jeï¿½li kï¿½t osiï¿½gnie 90 stopni, rozpocznij animacjï¿½ przesuwania
         if (currentAngle >= resetAngle && !isMovingClock && !resetAfterMove)
         {
-            Invoke(nameof(StartClockMove), waitBeforeMove); // Czekaj 2 sekundy, zanim zaczniesz przesuwaæ zegar
-            resetAfterMove = true; // Zabezpieczenie przed wielokrotnym wywo³aniem tej samej animacji
+            Invoke(nameof(StartClockMove), waitBeforeMove); // Czekaj 2 sekundy, zanim zaczniesz przesuwaï¿½ zegar
+            resetAfterMove = true; // Zabezpieczenie przed wielokrotnym wywoï¿½aniem tej samej animacji
         }
     }
 
@@ -104,13 +108,14 @@ public class ClockController : MonoBehaviour
 
         if(targetAngle == -90f)
         {
+            midDay?.Invoke();
             breakSystem.BreakTime();
         }
 
         if (targetAngle >= resetAngle)
         {
-            targetAngle = resetAngle; // Ustaw maksymalny k¹t na 90 stopni
-            canReset = true; // Po osi¹gniêciu 90 stopni umo¿liw reset
+            targetAngle = resetAngle; // Ustaw maksymalny kï¿½t na 90 stopni
+            canReset = true; // Po osiï¿½gniï¿½ciu 90 stopni umoï¿½liw reset
         }
     }
 
@@ -118,14 +123,14 @@ public class ClockController : MonoBehaviour
     {
         isMovingClock = true;
         moveTime = 0f; // Resetuj czas ruchu
-        fadeTime = 0f; // Resetuj czas animacji pojawiania siê t³a
+        fadeTime = 0f; // Resetuj czas animacji pojawiania siï¿½ tï¿½a
     }
 
     private void StartClockReturn()
     {
         isReturningClock = true;
         moveTime = 0f; // Resetuj czas ruchu
-        fadeTime = 0f; // Resetuj czas animacji pojawiania siê t³a
+        fadeTime = 0f; // Resetuj czas animacji pojawiania siï¿½ tï¿½a
     }
 
     private void MoveClockToCenter()
@@ -138,7 +143,7 @@ public class ClockController : MonoBehaviour
             t = 1f;
             isMovingClock = false;
 
-            // Rozpocznij animacjê resetu po zakoñczeniu przesuwania zegara na œrodek
+            // Rozpocznij animacjï¿½ resetu po zakoï¿½czeniu przesuwania zegara na ï¿½rodek
             StartReset();
             Invoke(nameof(StartClockReturn), waitBeforeMove);
         }
@@ -147,7 +152,7 @@ public class ClockController : MonoBehaviour
         clockUI.anchoredPosition = Vector3.Lerp(originalPosition, targetPosition, Mathf.SmoothStep(0f, 1f, t));
         clockUI.localScale = Vector3.Lerp(originalScale, targetScale, Mathf.SmoothStep(0f, 1f, t));
 
-        // Rozpocznij animacjê t³a (pojawianie siê obrazu)
+        // Rozpocznij animacjï¿½ tï¿½a (pojawianie siï¿½ obrazu)
         fadeTime += Time.deltaTime;
     }
 
@@ -161,7 +166,7 @@ public class ClockController : MonoBehaviour
             t = 1f;
             isReturningClock = false;
 
-            // Zresetuj zmienne po zakoñczeniu animacji powrotu
+            // Zresetuj zmienne po zakoï¿½czeniu animacji powrotu
             ResetAll();
         }
 
@@ -179,11 +184,11 @@ public class ClockController : MonoBehaviour
             t = 1f;
         }
 
-        // Lerpowanie wartoœci alfa t³a (od 0 do 1) - pojawianie siê obrazu w tle
+        // Lerpowanie wartoï¿½ci alfa tï¿½a (od 0 do 1) - pojawianie siï¿½ obrazu w tle
         if (backgroundImage != null)
         {
             Color bgColor = backgroundImage.color;
-            backgroundImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, Mathf.Lerp(0f, 1f, t)); // Zmiana przezroczystoœci obrazu
+            backgroundImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, Mathf.Lerp(0f, 1f, t)); // Zmiana przezroczystoï¿½ci obrazu
         }
     }
 
@@ -192,10 +197,10 @@ public class ClockController : MonoBehaviour
         if (isAnimating) return; // Nie wykonuj akcji, gdy animacja trwa
 
         animationStartAngle = currentAngle;
-        targetAngle = 360f + startAngle; // Pe³ny obrót do pocz¹tkowej wartoœci
+        targetAngle = 360f + startAngle; // Peï¿½ny obrï¿½t do poczï¿½tkowej wartoï¿½ci
         animationTime = 0f;
         isAnimating = true;
-        canReset = false; // Wy³¹cz mo¿liwoœæ resetu po rozpoczêciu
+        canReset = false; // Wyï¿½ï¿½cz moï¿½liwoï¿½ï¿½ resetu po rozpoczï¿½ciu
     }
 
     private void AnimateClockHand()
@@ -208,7 +213,7 @@ public class ClockController : MonoBehaviour
             t = 1f;
             isAnimating = false;
 
-            // Jeœli osi¹gnêliœmy pe³ny obrót, zresetuj k¹t
+            // Jeï¿½li osiï¿½gnï¿½liï¿½my peï¿½ny obrï¿½t, zresetuj kï¿½t
             if (targetAngle >= 360f + startAngle)
             {
                 currentAngle = startAngle;
@@ -241,7 +246,7 @@ public class ClockController : MonoBehaviour
 
         if (backgroundImage != null)
         {
-            backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0f); // T³o niewidoczne
+            backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0f); // Tï¿½o niewidoczne
         }
     }
 }

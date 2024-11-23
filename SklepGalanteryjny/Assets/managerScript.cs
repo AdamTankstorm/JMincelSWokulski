@@ -7,13 +7,15 @@ public class managerScript : MonoBehaviour
 {
     public customerScript customerManager;
     public dialogueScript dialogueManager;
+    public ClockController clockManager;
+    public ButtonHandler buttonManager;
 
     // To store the dialogue sets from the CSV file
     private List<DialogueSet> dialogueSets;
 
     void Start()
     {
-        if (customerManager != null && dialogueManager != null)
+        if (customerManager != null)
         {
             Debug.Log("managerScript subscribed to customerScript events");
             customerManager.customerArrives += customerArrives;
@@ -22,6 +24,16 @@ public class managerScript : MonoBehaviour
         else
         {
             Debug.LogError("customerScript or dialogueManager not found in the scene!");
+        }
+
+        if (clockManager != null)
+        {
+            clockManager.midDay += midDay;
+        }
+
+        if (buttonManager != null)
+        {
+            buttonManager.lateDay += lateDay;
         }
 
         // Load the dialogue sets from the CSV file
@@ -154,6 +166,19 @@ public class managerScript : MonoBehaviour
     {
         Debug.Log("Customer Left: Dialogue Stopped");
         dialogueManager.gameObject.SetActive(false); // Hide the dialogue box
+        clockManager.HandleClient();
+    }
+
+    public void midDay()
+    {
+        customerManager.gameObject.SetActive(false);
+        dialogueManager.gameObject.SetActive(false);
+    }
+
+    public void lateDay()
+    {
+        customerManager.gameObject.SetActive(true);
+        dialogueManager.gameObject.SetActive(true);
     }
 }
 

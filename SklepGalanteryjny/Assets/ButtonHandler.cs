@@ -1,16 +1,19 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic; // Do obs³ugi list
+using System.Collections;
+using System.Collections.Generic; // Do obsï¿½ugi list
 
 public class ButtonHandler : MonoBehaviour
 {
+    public event Action lateDay;
     public BreakSystem breakSystem;
     public List<Image> itemInfoPanels; // Lista wszystkich paneli
     public bool isExitButtonClicked = false;
 
     private void Start()
     {
-        // Upewnij siê, ¿e panele s¹ przypisane w Inspectorze
+        // Upewnij siï¿½, ï¿½e panele sï¿½ przypisane w Inspectorze
         if (itemInfoPanels == null || itemInfoPanels.Count == 0)
         {
             Debug.LogWarning("Brak przypisanych paneli w ButtonHandler!");
@@ -22,6 +25,7 @@ public class ButtonHandler : MonoBehaviour
         isExitButtonClicked = true;
         if (breakSystem != null)
         {
+            lateDay?.Invoke();
             breakSystem.BreakTimeOver();
         }
     }
@@ -30,32 +34,32 @@ public class ButtonHandler : MonoBehaviour
     {
         if (itemInfoPanel != null)
         {
-            itemInfoPanel.gameObject.SetActive(false); // Wy³¹cz okreœlony panel
-            CheckIfAllPanelsAreInactive(); // SprawdŸ, czy wszystkie panele s¹ wy³¹czone
+            itemInfoPanel.gameObject.SetActive(false); // Wyï¿½ï¿½cz okreï¿½lony panel
+            CheckIfAllPanelsAreInactive(); // Sprawdï¿½, czy wszystkie panele sï¿½ wyï¿½ï¿½czone
         }
     }
 
     private void CheckIfAllPanelsAreInactive()
     {
-        // SprawdŸ, czy wszystkie panele na liœcie s¹ nieaktywne
+        // Sprawdï¿½, czy wszystkie panele na liï¿½cie sï¿½ nieaktywne
         foreach (Image panel in itemInfoPanels)
         {
             if (panel.gameObject.activeSelf)
             {
-                // Jeœli znajdziesz aktywny panel, nie rób nic wiêcej
+                // Jeï¿½li znajdziesz aktywny panel, nie rï¿½b nic wiï¿½cej
                 return;
             }
         }
 
-        // Jeœli wszystkie panele s¹ nieaktywne, wykonaj odpowiedni¹ akcjê
-        Debug.Log("Wszystkie panele s¹ wy³¹czone!");
+        // Jeï¿½li wszystkie panele sï¿½ nieaktywne, wykonaj odpowiedniï¿½ akcjï¿½
+        Debug.Log("Wszystkie panele sï¿½ wyï¿½ï¿½czone!");
         OnAllPanelsInactive();
     }
 
     private void OnAllPanelsInactive()
     {
-        // Tutaj mo¿esz wykonaæ logikê, gdy wszystkie panele s¹ wy³¹czone
-        // Na przyk³ad zamkn¹æ sklep
+        // Tutaj moï¿½esz wykonaï¿½ logikï¿½, gdy wszystkie panele sï¿½ wyï¿½ï¿½czone
+        // Na przykï¿½ad zamknï¿½ï¿½ sklep
         isExitButtonClicked = true;
         if (breakSystem != null)
         {
