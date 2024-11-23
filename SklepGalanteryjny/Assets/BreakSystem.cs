@@ -1,66 +1,110 @@
 using UnityEngine;
 using UnityEngine.UI;
+
 public class BreakSystem : MonoBehaviour
 {
-    public Image backgroundImage;
+    public ButtonHandler buttonHandler;
+    public Image backgroundImage; // T³o
+    public Image clockBackground; // T³o zegara
+    public Image clockHand;       // Wskazówka zegara
+    public Image specialItemShopPanel;
     private float fadeTime = 0f;
     public float fadeDuration = 1f;
+    private bool isFadingOut = false; // Flaga: œciemnianie
+    private bool isFadingIn = false;  // Flaga: rozjaœnianie
 
     private void Start()
     {
+        // Ustaw pocz¹tkow¹ przezroczystoœæ t³a i zegara
         if (backgroundImage != null)
         {
+            backgroundImage.gameObject.SetActive(false);
             Color bgColor = backgroundImage.color;
             backgroundImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, 0f); // T³o jest pocz¹tkowo niewidoczne
         }
+
+        if (clockBackground != null && clockHand != null && specialItemShopPanel != null)
+        {
+            clockBackground.gameObject.SetActive(true); // Zegar jest pocz¹tkowo widoczny
+            clockHand.gameObject.SetActive(true);
+            specialItemShopPanel.gameObject.SetActive(false);
+        }
     }
 
-    void Update()
+    private void Update()
     {
-        // Zaktualizuj fadeTime w metodzie Update, aby animacja dzia³a³a p³ynnie
-        if (fadeTime > 0f)
+        if (isFadingOut || isFadingIn)
         {
             fadeTime += Time.deltaTime;
-            if (fadeTime > fadeDuration)
+
+            float t = Mathf.Clamp01(fadeTime / fadeDuration);
+            if (backgroundImage != null)
             {
-                fadeTime = fadeDuration; // Upewnij siê, ¿e fadeTime nie przekroczy fadeDuration
+                backgroundImage.gameObject.SetActive(true);
+                Color bgColor = backgroundImage.color;
+                float alpha = isFadingOut
+                    ? Mathf.Lerp(0f, 1f, t) // Œciemnianie
+                    : Mathf.Lerp(1f, 0f, t); // Rozjaœnianie
+                backgroundImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, alpha);
+            }
+
+            if (fadeTime >= fadeDuration)
+            {
+                fadeTime = 0f; // Resetuj czas
+                if (isFadingIn)
+                {
+                    isFadingIn = false;
+                    backgroundImage.gameObject.SetActive(false);
+                }
+
+                if (isFadingOut && !buttonHandler.isExitButtonClicked)
+                {
+                    isFadingOut = false;
+                    if (clockBackground != null && clockHand != null && specialItemShopPanel != null)
+                    {
+                        clockBackground.gameObject.SetActive(false); // Wy³¹cz zegar po œciemnieniu
+                        clockHand.gameObject.SetActive(false);
+                        specialItemShopPanel.gameObject.SetActive(true);
+                    }
+                    StartFadeIn(); // Automatycznie rozpocznij rozjaœnianie
+                }
+                else if (isFadingOut && buttonHandler.isExitButtonClicked)
+                {
+                    isFadingOut = false;
+                    if (clockBackground != null && clockHand != null && specialItemShopPanel != null)
+                    {
+                        clockBackground.gameObject.SetActive(true); // Wy³¹cz zegar po œciemnieniu
+                        clockHand.gameObject.SetActive(true);
+                        specialItemShopPanel.gameObject.SetActive(false);
+                    }
+                    StartFadeIn(); // Automatycznie rozpocznij rozjaœnianie
+                }
+
+
             }
         }
     }
 
     public void BreakTime()
     {
-        // Uruchom animacjê œciemniania po 2 sekundach
-        Invoke(nameof(StartFade), 2f); // Wywo³aj metodê StartFade po 2 sekundach
+        // Rozpocznij animacjê œciemniania t³a
+        Invoke(nameof(StartFadeOut), 2f); // Wywo³aj animacjê œciemniania po 2 sekundach
+    }
+    public void BreakTimeOver()
+    {
+        // Rozpocznij animacjê œciemniania t³a
+        Invoke(nameof(StartFadeOut), 0f); // Wywo³aj animacjê œciemniania po 2 sekundach
     }
 
-    private void StartFade()
+    private void StartFadeOut()
     {
-        fadeTime = 0f; // Resetuj fadeTime przy rozpoczêciu animacji
-
-        // Uruchom korutynê do p³ynnej animacji œciemniania t³a
-        StartCoroutine(FadeBackground());
+        fadeTime = 0f; // Zresetuj czas
+        isFadingOut = true; // Rozpocznij animacjê œciemniania
     }
 
-    private System.Collections.IEnumerator FadeBackground()
+    private void StartFadeIn()
     {
-        while (fadeTime < fadeDuration)
-        {
-            float t = fadeTime / fadeDuration;
-            if (backgroundImage != null)
-            {
-                Color bgColor = backgroundImage.color;
-                backgroundImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, Mathf.Lerp(0f, 1f, t)); // Zmiana przezroczystoœci t³a
-            }
-            fadeTime += Time.deltaTime; // Dodaj czas w ka¿dej klatce
-            yield return null; // Poczekaj do nastêpnej klatki
-        }
-
-        // Upewnij siê, ¿e t³o bêdzie mia³o pe³n¹ przezroczystoœæ po zakoñczeniu animacji
-        if (backgroundImage != null)
-        {
-            Color bgColor = backgroundImage.color;
-            backgroundImage.color = new Color(bgColor.r, bgColor.g, bgColor.b, 1f);
-        }
+        fadeTime = 0f; // Zresetuj czas
+        isFadingIn = true; // Rozpocznij animacjê rozjaœniania
     }
 }
