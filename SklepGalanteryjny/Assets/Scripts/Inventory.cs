@@ -6,6 +6,7 @@ using UnityEngine;
 using System;
 public class Inventory : MonoBehaviour
 {
+    public float money = 200f;
     public EventHandler onItemsChanged;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public List<Item> ItemsList;
@@ -40,23 +41,31 @@ public class Inventory : MonoBehaviour
         
     }
     // Update is called once per frame
-    public bool isItemInInventory(string name)
+    public int isItemInInventory(string name)
     {
         if((ItemsList.FindAll(item => item.name == name).Count)>0)
         {
-            return true;
+            return ItemsList.FindAll(item => item.name == name).FirstOrDefault().count;
         }
 
-        else { return false; }
+        else { return 0; }
 
     }
-    public bool isItemInInventory(int id)
+    public int isItemInInventory(int id)
     {
         if ((ItemsList.FindAll(item => item.itemID == id).Count) > 0)
         {
-            return true;
+           return ItemsList.FindAll(item => item.itemID == id).FirstOrDefault().count;
         }
-        else { return false; }
+        else { return 0; }
+    }
+    public Item getItemByString(string name)
+    {
+        if ((ItemsList.FindAll(item => item.name == name).Count) > 0)
+        {
+            return ItemsList.FirstOrDefault(item => item.itemName == name);
+        }
+        return null;
     }
     public void itemsChanged()
     {
