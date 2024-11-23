@@ -330,37 +330,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 50530620}
   m_CullTransparentMesh: 1
---- !u!1 &104843515
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 104843516}
-  m_Layer: 0
-  m_Name: Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &104843516
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 104843515}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 241.15823, y: 282.8838, z: -0.65711784}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &111351027
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,6 +542,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 111801594}
   m_CullTransparentMesh: 1
+--- !u!1 &198353060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 198353061}
+  - component: {fileID: 198353062}
+  m_Layer: 0
+  m_Name: ButtonHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &198353061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 198353060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 241.15823, y: 282.8838, z: -0.65711784}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &198353062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 198353060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8331cd2fc323ca43a645f4d7587a613, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  breakSystem: {fileID: 1138057418}
+  isExitButtonClicked: 0
 --- !u!1 &202784152
 GameObject:
   m_ObjectHideFlags: 0
@@ -943,7 +958,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 419244311}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 198353062}
+        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
+        m_MethodName: BuySpecialItemButton
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1821428948}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &419244311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1244,7 +1271,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 531944677}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 198353062}
+        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
+        m_MethodName: ExitSpecialItemShopButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ExitSpecialItemShopButton()
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &531944677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1315,8 +1354,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 816885448}
-  - {fileID: 497201564}
   - {fileID: 1690633448}
+  - {fileID: 497201564}
   m_Father: {fileID: 1503936076}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1622,7 +1661,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 754088506}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 198353062}
+        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
+        m_MethodName: BuySpecialItemButton
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1046265775}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &754088506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2582,7 +2633,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431bc373740c14543865777badff28f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonHandler: {fileID: 198353062}
   backgroundImage: {fileID: 497201565}
+  clockBackground: {fileID: 1591661582}
+  clockHand: {fileID: 50530622}
+  specialItemShopPanel: {fileID: 1690633450}
   fadeDuration: 1
 --- !u!4 &1138057419
 Transform:
@@ -4195,7 +4250,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2062529115}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 198353062}
+        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
+        m_MethodName: BuySpecialItemButton
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 818627352}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2062529115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4315,6 +4382,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 678891290}
-  - {fileID: 104843516}
   - {fileID: 1503936076}
   - {fileID: 1138057419}
+  - {fileID: 198353061}
