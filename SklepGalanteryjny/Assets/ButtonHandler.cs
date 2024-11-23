@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic; // Do obs�ugi list
-
+using TMPro;
 public class ButtonHandler : MonoBehaviour
 {
     public event Action lateDay;
@@ -14,14 +14,18 @@ public class ButtonHandler : MonoBehaviour
     public bool isExitButtonClicked = false;
     public Image background; // T�o, kt�re ma p�ynnie przechodzi�
     private float fadeDuration = 1f, fadeDuration1 = 0.2f; // Czas trwania animacji
-
+    public Inventory inventory;
     private CanvasGroup notEnoughFundsTransform; // Do kontrolowania przezroczysto�ci komunikatu
-
+    public TMP_Text moneyText;
     private void Start()
     {
+        inventory = FindAnyObjectByType<Inventory>();
+        moneyText.text = "Ilość rubli: "+inventory.money.ToString();
+
         // Inicjalizacja komunikatu "NotEnoughFunds"
         if (NotEnoughFunds != null)
         {
+            
             NotEnoughFunds.gameObject.SetActive(false); // Ukryj pocz�tkowo
             notEnoughFundsTransform = NotEnoughFunds.GetComponent<CanvasGroup>(); // Pobierz CanvasGroup do kontrolowania przezroczysto�ci
             if (notEnoughFundsTransform == null)
