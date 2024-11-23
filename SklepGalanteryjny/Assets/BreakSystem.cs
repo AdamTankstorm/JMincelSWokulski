@@ -71,6 +71,7 @@ public class BreakSystem : MonoBehaviour
                 else if (isFadingOut && buttonHandler.isExitButtonClicked)
                 {
                     isFadingOut = false;
+                    buttonHandler.isExitButtonClicked = false;
                     if (clockBackground != null && clockHand != null && specialItemShopPanel != null)
                     {
                         clockBackground.gameObject.SetActive(true); // Wy³¹cz zegar po œciemnieniu
