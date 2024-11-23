@@ -17,7 +17,7 @@ public class haggling : MonoBehaviour
     private void Update()
     {
         slider.value = Mathf.PingPong(Time.time / Time.fixedDeltaTime, 100);
-        if (Input.GetButton("Fire1"))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (slider.value >= greenStart && slider.value < greenStart + 10) { 
 
