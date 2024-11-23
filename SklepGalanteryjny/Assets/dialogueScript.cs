@@ -46,7 +46,7 @@ public class dialogueScript : MonoBehaviour
         StartCoroutine(typeLine());
     }
 
-    IEnumerator typeLine()
+    public IEnumerator typeLine()
     {
         foreach (char c in lines[index].ToCharArray())
         {

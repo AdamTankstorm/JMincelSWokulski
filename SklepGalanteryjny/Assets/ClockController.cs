@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class ClockController : MonoBehaviour
 {
     public event Action midDay;
+    public event Action endDay;
+    public event Action startDay;
 
     public BreakSystem breakSystem;
 
@@ -91,6 +93,7 @@ public class ClockController : MonoBehaviour
         // Je�li k�t osi�gnie 90 stopni, rozpocznij animacj� przesuwania
         if (currentAngle >= resetAngle && !isMovingClock && !resetAfterMove)
         {
+            endDay?.Invoke();
             Invoke(nameof(StartClockMove), waitBeforeMove); // Czekaj 2 sekundy, zanim zaczniesz przesuwa� zegar
             resetAfterMove = true; // Zabezpieczenie przed wielokrotnym wywo�aniem tej samej animacji
         }
@@ -109,6 +112,7 @@ public class ClockController : MonoBehaviour
         if(targetAngle == -90f)
         {
             midDay?.Invoke();
+            
             breakSystem.BreakTime();
         }
 
@@ -217,6 +221,7 @@ public class ClockController : MonoBehaviour
             if (targetAngle >= 360f + startAngle)
             {
                 currentAngle = startAngle;
+                startDay?.Invoke();
             }
             else
             {

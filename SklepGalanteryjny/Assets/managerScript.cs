@@ -9,6 +9,7 @@ public class managerScript : MonoBehaviour
     public dialogueScript dialogueManager;
     public ClockController clockManager;
     public ButtonHandler buttonManager;
+    public spawnScript spawnManager;
 
     // To store the dialogue sets from the CSV file
     private List<DialogueSet> dialogueSets;
@@ -31,6 +32,16 @@ public class managerScript : MonoBehaviour
             clockManager.midDay += midDay;
         }
 
+        if (clockManager != null)
+        {
+            clockManager.endDay += endDay;
+        }
+
+        if (clockManager != null)
+        {
+            clockManager.startDay += startDay;
+        }
+
         if (buttonManager != null)
         {
             buttonManager.lateDay += lateDay;
@@ -38,6 +49,29 @@ public class managerScript : MonoBehaviour
 
         // Load the dialogue sets from the CSV file
         LoadDialogueSets();
+
+        Debug.Log("Customer Arrived: Dialogue Started");
+
+        if (dialogueSets == null || dialogueSets.Count == 0)
+        {
+            Debug.LogError("No dialogue sets available to show!");
+            return;
+        }
+
+        // Select a random dialogue set from the preloaded list
+        DialogueSet selectedSet = dialogueSets[Random.Range(0, dialogueSets.Count)];
+
+        if (selectedSet == null || string.IsNullOrEmpty(selectedSet.LinesA) || string.IsNullOrEmpty(selectedSet.LinesB))
+        {
+            Debug.LogError("Selected dialogue set has no lines to display.");
+            return;
+        }
+
+        // Set the lines in the dialogueManager
+        dialogueManager.gameObject.SetActive(true); // Show the dialogue box
+        dialogueManager.lines = new string[] { selectedSet.LinesA, selectedSet.LinesB };
+
+        dialogueManager.startDialogue();
     }
 
     private void LoadDialogueSets()
@@ -171,14 +205,30 @@ public class managerScript : MonoBehaviour
 
     public void midDay()
     {
+        StopCoroutine(customerManager.customerChange());
         customerManager.gameObject.SetActive(false);
-        dialogueManager.gameObject.SetActive(false);
+        
+        spawnManager.gameObject.SetActive(false);
     }
 
     public void lateDay()
     {
         customerManager.gameObject.SetActive(true);
-        dialogueManager.gameObject.SetActive(true);
+        StartCoroutine(customerManager.customerChange());
+
+        spawnManager.gameObject.SetActive(true);
+    }
+
+    public void endDay()
+    {
+        StopCoroutine(customerManager.customerChange());
+        customerManager.gameObject.SetActive(false);
+    }
+
+    public void startDay()
+    {
+        customerManager.gameObject.SetActive(true);
+        StartCoroutine(customerManager.customerChange());
     }
 }
 

@@ -37,45 +37,49 @@ public class customerScript : MonoBehaviour
         }
 
         // Start the loop
-        StartCoroutine(CustomerLoop());
+        //StartCoroutine(customerChange());
     }
 
-    private IEnumerator CustomerLoop()
+    void Update()
     {
-        while (true)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            // Wait for 5 seconds
-            yield return new WaitForSeconds(5f);
+            StartCoroutine(customerChange());
+        }
+    }
 
-            if (customers.Count > 0)
+    public IEnumerator customerChange()
+    {
+        if (customers.Count > 0)
+        {
+            // Remove the first customer
+            Debug.Log($"Removing: {customers[0]}");
+            customers.RemoveAt(0);
+
+            customerLeaves?.Invoke();
+
+            // Wait for 2 seconds
+            yield return new WaitForSeconds(3f);
+
+            // Decrease the numbers of remaining customers
+            for (int i = 0; i < customers.Count; i++)
             {
-                // Remove the first customer
-                Debug.Log($"Removing: {customers[0]}");
-                customers.RemoveAt(0);
-
-                customerLeaves?.Invoke();
-
-                // Decrease the numbers of remaining customers
-                for (int i = 0; i < customers.Count; i++)
-                {
-                    customers[i].Number = i + 1;
-                }
-
-                // Add a new customer with number 3
-                if (customers.Count < 3)
-                {
-                    Customer newCustomer = new Customer(3, GetRandomItem());
-                    customers.Add(newCustomer);
-                    Debug.Log($"Added: {newCustomer}");
-                }
-
-                yield return new WaitForSeconds(2f);
-
-                customerArrives?.Invoke();
-
-                // Log current customers
-                LogCurrentCustomers();
+                customers[i].Number = i + 1;
             }
+
+            // Add a new customer with number 3
+            if (customers.Count < 3)
+            {
+                Customer newCustomer = new Customer(3, GetRandomItem());
+                customers.Add(newCustomer);
+                Debug.Log($"Added: {newCustomer}");
+            }
+
+            customerArrives?.Invoke();
+
+            // Log current customers
+            LogCurrentCustomers();
+            
         }
     }
 
