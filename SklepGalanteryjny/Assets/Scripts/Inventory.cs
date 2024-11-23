@@ -8,7 +8,7 @@ public class Inventory : MonoBehaviour
 {
     public float money = 200f;
     public EventHandler onItemsChanged;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Start is called once before the first execution of Update after the MonoBehaviour is created skibi diddy
     public List<Item> ItemsList;
     public Wardrobe[] wardrobes;
     public Slot[] AvaibleSlots = null;

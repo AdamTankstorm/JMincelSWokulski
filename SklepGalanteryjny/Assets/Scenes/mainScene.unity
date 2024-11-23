@@ -1785,7 +1785,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: -1120, y: -514.73206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &361407888
@@ -2419,6 +2419,8 @@ MonoBehaviour:
   - {fileID: 932691048}
   isExitButtonClicked: 0
   background: {fileID: 741027164}
+  inventory: {fileID: 0}
+  moneyText: {fileID: 0}
 --- !u!4 &598679743
 Transform:
   m_ObjectHideFlags: 0
@@ -2472,7 +2474,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: -1120, y: -514.73206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &627065978
@@ -3427,7 +3429,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: -1120, y: -514.73206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &728945936
@@ -3485,7 +3487,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &741027164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7041,8 +7043,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 25, y: 250}
-  m_SizeDelta: {x: -650, y: -700}
+  m_AnchoredPosition: {x: 25, y: 300}
+  m_SizeDelta: {x: -650, y: -800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1446090098
 MonoBehaviour:
@@ -8181,6 +8183,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1597684731}
+  - component: {fileID: 1597684732}
   m_Layer: 5
   m_Name: NotEnoughFunds
   m_TagString: Untagged
@@ -8210,6 +8213,18 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000030517578, y: 11.999985}
   m_SizeDelta: {x: 400, y: 260}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1597684732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597684730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e91132ee68a9f94394a9358d3cea428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1605715806
 GameObject:
   m_ObjectHideFlags: 0
@@ -9165,7 +9180,7 @@ MonoBehaviour:
   buttonManager: {fileID: 598679742}
   spawnManager: {fileID: 1857900383}
   shopManager: {fileID: 1333131298}
-  hagglingManager: {fileID: 0}
+  hagglingManager: {fileID: 1002080454}
 --- !u!4 &1773018536
 Transform:
   m_ObjectHideFlags: 0
