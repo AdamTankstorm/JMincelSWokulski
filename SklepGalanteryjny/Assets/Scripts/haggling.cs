@@ -1,5 +1,9 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class haggling : MonoBehaviour
 {
     public Slider slider;
@@ -7,6 +11,11 @@ public class haggling : MonoBehaviour
     private Texture2D gradientTexture;
     private Camera camera;
     public int greenStart;
+    private int tries = 0, red = 0, green = 0, yellow = 0;
+
+    public event Action win;
+    public event Action draw;
+    public event Action loss;
     
     void OnEnable()
     {
@@ -16,19 +25,45 @@ public class haggling : MonoBehaviour
 
     private void Update()
     {
+        if(tries == 2)
+        {
+            if(red >= 1)
+            {
+                loss?.Invoke();
+            }
+            else if(yellow == 2)
+            {
+                draw?.Invoke();
+            }
+            else if(green >= 1)
+            {
+                win?.Invoke();
+            }
+
+            tries = 0;
+            red = 0;
+            green = 0;
+            yellow = 0;
+            gameObject.SetActive(false);
+        }
+
         slider.value = Mathf.PingPong(Time.time / Time.fixedDeltaTime, 100);
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (slider.value >= greenStart && slider.value < greenStart + 10) { 
-
+            if (slider.value >= greenStart && slider.value < greenStart + 10)
+            { 
+                tries++;
+                red++;
             }
             else if ((slider.value >= greenStart - 20 && slider.value < greenStart) || (slider.value >= greenStart + 10 && slider.value < greenStart + 20 + 10)) // Red bar surrounding green
             {
-
+                tries++;
+                green++;
             }
             else
             {
-
+                tries++;
+                yellow++;
             }
         }
     }
@@ -39,7 +74,7 @@ public class haggling : MonoBehaviour
         int redLength = 20;   // Red bar on both sides
 
         // Random start position for the green bar, ensuring there's space for red on both sides
-        greenStart = Random.Range(redLength, totalLength - greenLength - redLength);
+        greenStart = UnityEngine.Random.Range(redLength, totalLength - greenLength - redLength);
 
         gradientTexture = new Texture2D(totalLength, 1);
         gradientTexture.wrapMode = TextureWrapMode.Clamp;

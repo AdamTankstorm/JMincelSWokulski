@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class customerScript : MonoBehaviour
 {
+
     public event Action customerArrives;
     public event Action customerLeaves;
     // Customer class
@@ -42,10 +43,10 @@ public class customerScript : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        /*if (Input.GetKeyDown(KeyCode.Space))
         {
             StartCoroutine(customerChange());
-        }
+        }*/
     }
 
     public IEnumerator customerChange()
@@ -59,7 +60,7 @@ public class customerScript : MonoBehaviour
             customerLeaves?.Invoke();
 
             // Wait for 2 seconds
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(6f);
 
             // Decrease the numbers of remaining customers
             for (int i = 0; i < customers.Count; i++)
@@ -98,4 +99,5 @@ public class customerScript : MonoBehaviour
             Debug.Log(customer);
         }
     }
+
 }
