@@ -8,22 +8,25 @@ public class ButtonHandler : MonoBehaviour
 {
     public event Action lateDay;
     public BreakSystem breakSystem;
+    public Image MorningShop;
     public Transform NotEnoughFunds; // Transform dla komunikatu
     public List<Image> itemInfoPanels; // Lista wszystkich paneli
     public bool isExitButtonClicked = false;
-    private float fadeDuration = 0.2f; // Czas trwania animacji
+    public Image background; // T�o, kt�re ma p�ynnie przechodzi�
+    private float fadeDuration = 1f, fadeDuration1 = 0.2f; // Czas trwania animacji
 
-    private CanvasGroup notEnoughFundsCanvasGroup; // Do kontrolowania przezroczysto�ci komunikatu
+    private CanvasGroup notEnoughFundsTransform; // Do kontrolowania przezroczysto�ci komunikatu
 
     private void Start()
     {
+        // Inicjalizacja komunikatu "NotEnoughFunds"
         if (NotEnoughFunds != null)
         {
             NotEnoughFunds.gameObject.SetActive(false); // Ukryj pocz�tkowo
-            notEnoughFundsCanvasGroup = NotEnoughFunds.GetComponent<CanvasGroup>(); // Pobierz CanvasGroup do kontrolowania przezroczysto�ci
-            if (notEnoughFundsCanvasGroup == null)
+            notEnoughFundsTransform = NotEnoughFunds.GetComponent<CanvasGroup>(); // Pobierz CanvasGroup do kontrolowania przezroczysto�ci
+            if (notEnoughFundsTransform == null)
             {
-                notEnoughFundsCanvasGroup = NotEnoughFunds.gameObject.AddComponent<CanvasGroup>(); // Je�li nie ma CanvasGroup, dodaj go
+                notEnoughFundsTransform = NotEnoughFunds.gameObject.AddComponent<CanvasGroup>(); // Je�li nie ma CanvasGroup, dodaj go
             }
         }
 
@@ -31,6 +34,14 @@ public class ButtonHandler : MonoBehaviour
         if (itemInfoPanels == null || itemInfoPanels.Count == 0)
         {
             Debug.LogWarning("Brak przypisanych paneli w ButtonHandler!");
+        }
+
+        // Ukryj t�o na starcie, je�li jest przypisane
+        if (background != null)
+        {
+            background.gameObject.SetActive(false);
+            Color bgColor = background.color;
+            background.color = new Color(bgColor.r, bgColor.g, bgColor.b, 0f); // Ustaw przezroczysto�� na 0
         }
     }
 
@@ -41,6 +52,14 @@ public class ButtonHandler : MonoBehaviour
         {
             lateDay?.Invoke();
             breakSystem.BreakTimeOver();
+        }
+    }
+
+    public void StartTheDay()
+    {
+        if (background != null)
+        {
+            StartCoroutine(FadeInBackground()); // Rozpocznij p�ynne pojawianie si� t�a
         }
     }
 
@@ -66,22 +85,64 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
+    private IEnumerator FadeInBackground()
+    {
+        if (background != null)
+        {
+            background.gameObject.SetActive(true);
+            float startTime = Time.time;
+            Color bgColor = background.color;
+
+            while (Time.time < startTime + fadeDuration)
+            {
+                float t = (Time.time - startTime) / fadeDuration;
+                background.color = new Color(bgColor.r, bgColor.g, bgColor.b, Mathf.Lerp(0f, 1f, t)); // Stopniowe zwi�kszanie alfa
+                yield return null;
+            }
+
+            background.color = new Color(bgColor.r, bgColor.g, bgColor.b, 1f); // Ustaw pe�n� widoczno��
+
+            MorningShop.gameObject.SetActive(false);
+            StartCoroutine(FadeOutBackground()); // Rozpocznij p�ynne pojawianie si� t�a
+        }
+    }
+
+    private IEnumerator FadeOutBackground()
+    {
+        if (background != null)
+        {
+
+            float startTime = Time.time;
+            Color bgColor = background.color;
+
+            while (Time.time < startTime + fadeDuration)
+            {
+                float t = (Time.time - startTime) / fadeDuration;
+                background.color = new Color(bgColor.r, bgColor.g, bgColor.b, Mathf.Lerp(1f, 0f, t)); // Stopniowe zmniejszanie alfa
+                yield return null;
+            }
+
+            background.color = new Color(bgColor.r, bgColor.g, bgColor.b, 0f); // Ustaw pe�n� przezroczysto��
+            background.gameObject.SetActive(false);
+        }
+    }
+
     private IEnumerator FadeInNotEnoughFunds()
     {
         if (NotEnoughFunds != null)
         {
             NotEnoughFunds.gameObject.SetActive(true); // Upewnij si�, �e komunikat jest aktywowany
-            notEnoughFundsCanvasGroup.alpha = 0f; // Ustaw pocz�tkow� przezroczysto�� na 0
+            notEnoughFundsTransform.alpha = 0f; // Ustaw pocz�tkow� przezroczysto�� na 0
 
             float startTime = Time.time;
 
-            while (Time.time < startTime + fadeDuration)
+            while (Time.time < startTime + fadeDuration1)
             {
-                notEnoughFundsCanvasGroup.alpha = Mathf.Lerp(0f, 1f, (Time.time - startTime) / fadeDuration); // Stopniowe zwi�kszanie przezroczysto�ci
+                notEnoughFundsTransform.alpha = Mathf.Lerp(0f, 1f, (Time.time - startTime) / fadeDuration1); // Stopniowe zwi�kszanie przezroczysto�ci
                 yield return null; // Poczekaj do nast�pnej klatki
             }
 
-            notEnoughFundsCanvasGroup.alpha = 1f; // Upewnij si�, �e na ko�cu osi�gni�to pe�n� przezroczysto��
+            notEnoughFundsTransform.alpha = 1f; // Upewnij si�, �e na ko�cu osi�gni�to pe�n� przezroczysto��
         }
     }
 
@@ -91,38 +152,33 @@ public class ButtonHandler : MonoBehaviour
         {
             float startTime = Time.time;
 
-            while (Time.time < startTime + fadeDuration)
+            while (Time.time < startTime + fadeDuration1)
             {
-                notEnoughFundsCanvasGroup.alpha = Mathf.Lerp(1f, 0f, (Time.time - startTime) / fadeDuration); // Stopniowe zmniejszanie przezroczysto�ci
+                notEnoughFundsTransform.alpha = Mathf.Lerp(1f, 0f, (Time.time - startTime) / fadeDuration1); // Stopniowe zmniejszanie przezroczysto�ci
                 yield return null; // Poczekaj do nast�pnej klatki
             }
 
-            notEnoughFundsCanvasGroup.alpha = 0f; // Upewnij si�, �e na ko�cu osi�gni�to pe�n� przezroczysto��
+            notEnoughFundsTransform.alpha = 0f; // Upewnij si�, �e na ko�cu osi�gni�to pe�n� przezroczysto��
             NotEnoughFunds.gameObject.SetActive(false); // Po zako�czeniu animacji ukryj obiekt
         }
     }
 
     private void CheckIfAllPanelsAreInactive()
     {
-        // Sprawd�, czy wszystkie panele na li�cie s� nieaktywne
         foreach (Image panel in itemInfoPanels)
         {
             if (panel.gameObject.activeSelf)
             {
-                // Je�li znajdziesz aktywny panel, nie r�b nic wi�cej
-                return;
+                return; // Je�li znajdziesz aktywny panel, zako�cz metod�
             }
         }
 
-        // Je�li wszystkie panele s� nieaktywne, wykonaj odpowiedni� akcj�
         Debug.Log("Wszystkie panele s� wy��czone!");
         OnAllPanelsInactive();
     }
 
     private void OnAllPanelsInactive()
     {
-        // Tutaj mo�esz wykona� logik�, gdy wszystkie panele s� wy��czone
-        // Na przyk�ad zamkn�� sklep
         isExitButtonClicked = true;
         if (breakSystem != null)
         {
