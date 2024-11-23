@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class ButtonHandler : MonoBehaviour
 {
+    public FlyOffScreen flyOffScreen;
     public BreakSystem breakSystem;
     public Image MorningShop;
     public Transform NotEnoughFunds; // Transform dla komunikatu
@@ -41,6 +42,16 @@ public class ButtonHandler : MonoBehaviour
             Color bgColor = background.color;
             background.color = new Color(bgColor.r, bgColor.g, bgColor.b, 0f); // Ustaw przezroczystoœæ na 0
         }
+    }
+
+    public void PayButton()
+    {
+        flyOffScreen.StartFlyOff();
+    }
+
+    public void NotPayButton()
+    {
+        flyOffScreen.StartFlyOff();
     }
 
     public void ExitSpecialItemShopButton()
