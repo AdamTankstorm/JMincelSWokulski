@@ -1,33 +1,97 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 
 public class customerScript : MonoBehaviour
 {
-    // Events for customer arrival and departure
     public event Action customerArrives;
     public event Action customerLeaves;
+    // Customer class
+    private class Customer
+    {
+        public int Number { get; set; }
+        public string Item { get; set; }
+
+        public Customer(int number, string item)
+        {
+            Number = number;
+            Item = item;
+        }
+
+        public override string ToString()
+        {
+            return $"Customer {Number}: {Item}";
+        }
+    }
+
+    private List<Customer> customers = new List<Customer>();
+    private System.Random random = new System.Random();
 
     void Start()
     {
-        Debug.Log("customerScript started: Waiting for events to trigger");
-        StartCoroutine(handleCustomerEvents());
+        // Initializing with 3 customers
+        for (int i = 1; i <= 3; i++)
+        {
+            customers.Add(new Customer(i, GetRandomItem()));
+        }
+
+        // Start the loop
+        StartCoroutine(CustomerLoop());
     }
 
-    IEnumerator handleCustomerEvents()
+    private IEnumerator CustomerLoop()
     {
-        while (true) // This creates an infinite loop for continuous customer events
+        while (true)
         {
-            // Wait 12 seconds before the next customer arrives
+            // Wait for 5 seconds
             yield return new WaitForSeconds(5f);
-            Debug.Log("Triggering customerArrives event");
-            customerArrives?.Invoke();  // Trigger the customerArrives event
 
-            // Wait for 7 seconds after the customer arrives for them to leave
-            yield return new WaitForSeconds(5f);
-            Debug.Log("Triggering customerLeaves event");
-            customerLeaves?.Invoke();  // Trigger the customerLeaves event
+            if (customers.Count > 0)
+            {
+                // Remove the first customer
+                Debug.Log($"Removing: {customers[0]}");
+                customers.RemoveAt(0);
+
+                customerLeaves?.Invoke();
+
+                // Decrease the numbers of remaining customers
+                for (int i = 0; i < customers.Count; i++)
+                {
+                    customers[i].Number = i + 1;
+                }
+
+                // Add a new customer with number 3
+                if (customers.Count < 3)
+                {
+                    Customer newCustomer = new Customer(3, GetRandomItem());
+                    customers.Add(newCustomer);
+                    Debug.Log($"Added: {newCustomer}");
+                }
+
+                yield return new WaitForSeconds(2f);
+
+                customerArrives?.Invoke();
+
+                // Log current customers
+                LogCurrentCustomers();
+            }
+        }
+    }
+
+    private string GetRandomItem()
+    {
+        // Possible items for the customer
+        string[] items = { "len", "jedwab", "cukier", "cynamon", "mydło" };
+        return items[random.Next(items.Length)];
+    }
+
+    private void LogCurrentCustomers()
+    {
+        Debug.Log("Current Customers:");
+        foreach (var customer in customers)
+        {
+            Debug.Log(customer);
         }
     }
 }
