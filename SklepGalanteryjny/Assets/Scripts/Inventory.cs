@@ -6,7 +6,7 @@ using UnityEngine;
 using System;
 public class Inventory : MonoBehaviour
 {
-    
+    public float money = 200f;
     public EventHandler onItemsChanged;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public List<Item> ItemsList;
